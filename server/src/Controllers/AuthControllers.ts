@@ -9,10 +9,11 @@ export const addUser=async(req:Request,res:Response,next:NextFunction)=>{
    try{
       const parsed=userSchema.safeParse(req.body);
       if(!parsed.success){
+         const issue=parsed.error.issues[0];
          return res.status(400).json({
             success:false,
-            error:parsed.error.format(),
-         });
+            message:issue.message,
+         })
       }
       const {userName,name,email,password}=parsed.data;
       const checkUserExist=await addUserModel.findOne({email});
@@ -37,9 +38,9 @@ export const addUser=async(req:Request,res:Response,next:NextFunction)=>{
          });
        }
       const token=jwt.sign({email:email,userId:createUser._id,role:createUser.role},JWT_SECRET as string);
-      res.cookie('token',{
-         httPOnly:true,
-         samesite:"none",
+      res.cookie('token',token,{
+         httpOnly:true,
+         sameSite:"none",
          secure:true,
          partitioned:true,
       });

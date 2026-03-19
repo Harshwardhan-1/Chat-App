@@ -2,7 +2,7 @@ import {Request,Response,NextFunction} from 'express';
 import { addUserModel } from '../models/userModel';
 import { JWT_SECRET } from '../configs/env.config';
 import {authRequest, userPlayLoad } from '../types/authRequest.type';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export const isUserLoggedIn=async(req:authRequest,res:Response,next:NextFunction)=>{
     try{

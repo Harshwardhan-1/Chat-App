@@ -7,7 +7,7 @@ export interface userPlayLoad extends JwtPayload{
     name:string,
     email:string,
 }
-//whats value inside the token
+//whats value inside the token like email name userId
 
 
 export interface authRequest extends Request{

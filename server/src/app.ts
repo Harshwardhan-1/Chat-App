@@ -2,7 +2,7 @@ import express  , {Request , Response} from "express";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 import { FRONTEND_URL } from "./configs/env.config";
-import { errorMiddelware } from "./middleware/error.Middleware";
+import { errorMiddleware } from "./middleware/error.middleware";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -14,10 +14,16 @@ app.use(cors({
 }))
 
 
+import userRoutes from "./Routes/userRoutes";
+
+
 app.get("/"  , (req : Request, res : Response)=>{
   res.send("hii harsh here")
 })
 
-app.use(errorMiddelware);
+
+app.use('/api/user',userRoutes);
+
+app.use(errorMiddleware);
 
 export default app;

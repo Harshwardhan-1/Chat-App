@@ -47,7 +47,7 @@ export const addUserSchema=new mongoose.Schema<UserInterface>({
         default:Date.now(),
     },
 },{
-    timestamps:true,
+    timestamps:true, 
 })
 
 
