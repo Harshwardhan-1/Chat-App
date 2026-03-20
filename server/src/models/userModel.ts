@@ -8,6 +8,7 @@ export interface UserInterface extends Document{
     name?:string,
     userName?:string,
     email?:string,
+    profilepic?:string,
     password?:string,
     role?:string,
     createdAt?:Date,
@@ -41,6 +42,10 @@ export const addUserSchema=new mongoose.Schema<UserInterface>({
         type:String,
         enum:["user","admin"],
         default:"user",
+    },
+    profilepic:{
+        type:String,
+        default:"https://default-avatar.png",
     },
     createdAt:{
         type:Date,
