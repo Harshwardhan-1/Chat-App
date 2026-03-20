@@ -24,13 +24,13 @@ export const addUser=async(req:Request,res:Response,next:NextFunction)=>{
             message:"user already exist",
          });
       }
-      bcrypt.genSalt(Number(SALT_ROUND), function(err, salt) {
-    bcrypt.hash(password, salt,async function(err, hash) {
+      const salt=await bcrypt.genSalt(Number(SALT_ROUND));
+      const hashPassword=await bcrypt.hash(password,salt);
        const createUser=await addUserModel.create({
          name,
          userName,
          email,
-         password:hash,
+         password:hashPassword,
          role:"user",
        });
        if(!createUser){
@@ -48,8 +48,6 @@ export const addUser=async(req:Request,res:Response,next:NextFunction)=>{
       return res.status(201).json({
          success:true,
          message:"user created successfully",
-      });
-    });
 });
    }catch(err){
       next(err);

@@ -28,8 +28,8 @@ export default function SignUp(){
         }catch(err){
             const error=err as AxiosError;
             if(error.response && error.response.data){
-                const data=error.response.data as {message?:string};
-                alert(data.message || 'something went wrong');
+                const data=error.response.data as {error?:string; message?:string};
+                alert(data.error || data.message || 'something went wrong');
             }else{
                 alert(error.message);
             }
