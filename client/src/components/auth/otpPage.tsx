@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { env } from "../../configs/env.config";
 import { useNavigate } from "react-router-dom";
+import '../../styles/otpPage.css';
 export default function OtpPage(){
     const navigate=useNavigate();
     const [otpnumber,setotpnumber]=useState<string>('');
@@ -13,7 +14,6 @@ export default function OtpPage(){
         try{
             const response=await axios.post(`${env.backendurl}/api/v1/checkOtp`,send,{withCredentials:true});
             if(response.data.message=== 'otp verified successfull'){
-                alert('otp verified successfull');
                 navigate('/Dashboard');
             }
         }catch(err){
@@ -28,11 +28,16 @@ export default function OtpPage(){
     }
     return(
         <>
-        <h1>Enter your otp here</h1>
+         <div className="otp-page-wrapper">
+      <div className="otp-page">
+        <h1>Verify OTP</h1>
+        <p>Enter the 6-digit OTP sent to your email</p>
         <form onSubmit={handleSubmit}>
             <input type="text" placeholder="Enter your 6 digit otp here" value={otpnumber} onChange={(e)=>setotpnumber(e.target.value)} />
             <button type="submit">Submit</button>
         </form>
+        </div>
+        </div>
         </>
     );
 }

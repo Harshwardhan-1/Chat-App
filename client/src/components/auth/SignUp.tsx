@@ -2,6 +2,8 @@ import { useState } from "react";
 import { env } from "../../configs/env.config";
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import '../../styles/SignUp.css';
 export default function SignUp(){
     const navigate=useNavigate();
     const [name,setName]=useState<string>('');
@@ -37,15 +39,29 @@ export default function SignUp(){
     }
 return(
     <>
-    <h1>Enter your credentials here</h1>
-    <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Enter your name" value={name} onChange={(e)=>setName(e.target.value)} />
-        <input type="text" placeholder="Enter your username" value={userName} onChange={(e)=>setuserName(e.target.value)} />
-        <input type="email" placeholder="Enter email here" value={email} onChange={(e)=>setEmail(e.target.value)} />
-        <input type="password" placeholder="Enter your password here" value={password} onChange={(e)=>setPassword(e.target.value)} />
-        <input type="password" placeholder="Enter confirm password here" value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} />
-        <button  type="submit">Create Account</button>
-    </form>
-    </>
+     <div className="signup-page-wrapper">
+          <div className="signup-page">
+        <h1>Create an Account</h1>
+        <p>Get Started with us</p>
+        <form onSubmit={handleSubmit}>
+               <label>Name</label>
+          <input type="text" placeholder='Enter your Name' value={name} onChange={(e)=>setName(e.target.value)} />
+                    <label>Username</label>
+          <input type="text" placeholder='Enter your username' value={userName} onChange={(e)=>setuserName(e.target.value)} />
+          <label>Email</label>
+          <input type="email" placeholder='Enter your email ' value={email} onChange={(e)=>setEmail(e.target.value)}  />
+         <label>password</label>
+          <input type="password" placeholder='Create a password' value={password} onChange={(e)=>setPassword(e.target.value)} />
+          <label>Confirm Password</label>
+          <input type="password"  placeholder='Confirm Password' value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)}/>
+          <button type='submit'>Submit</button>
+          <div className="signin-link">
+    Already have an account?{" "}
+    <Link to="/login">Login</Link>
+  </div>
+        </form>
+        </div>
+        </div>
+        </>
 );
 }

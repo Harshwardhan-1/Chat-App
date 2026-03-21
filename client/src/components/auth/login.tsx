@@ -1,7 +1,9 @@
 import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { env } from "../../configs/env.config";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import '../../styles/login.css';
 
 export default function Login(){
     const navigate=useNavigate();
@@ -30,12 +32,23 @@ export default function Login(){
     }
     return(
         <>
-        <h1>welcome to chat app</h1>
+         <div className='signin-page-wrapper'>
+        <div className="signin-page">
+        <h1>Welcome Back</h1>
+        <p>Enter your Credentials to access your account</p>
         <form onSubmit={handleSubmit}>
+            <label>Email</label>
             <input type="text" placeholder="Enter your email here" value={email} onChange={(e)=>setEmail(e.target.value)}  />
+            <label>Password</label>
             <input type="password" placeholder="Enter your password here" value={password} onChange={(e)=>setPassword(e.target.value)} />
             <button type="submit">login</button>
+            <div className="signup-link">
+          Don't have an account?{" "}
+          <Link to="/">SignUp</Link>
+        </div>
         </form>
+        </div>
+        </div>
         </>
     );
 }
