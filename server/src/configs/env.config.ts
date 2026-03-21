@@ -10,4 +10,6 @@ export const {
     PORT,
     SALT_ROUND,
     JWT_SECRET,
+    SENDGRID_API_KEY,
+    SENDGRID_EMAIL,
 }=process.env;  

@@ -5,7 +5,7 @@ import {authRequest, userPlayLoad } from '../types/authRequest.type';
 import jwt from 'jsonwebtoken';
 
 export const isUserLoggedIn=async(req:authRequest,res:Response,next:NextFunction)=>{
-    try{
+    try{ 
     const token=req.cookies?.token;
     if(!token){
         return res.status(401).json({

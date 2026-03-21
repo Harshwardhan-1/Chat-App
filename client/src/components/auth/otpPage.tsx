@@ -2,21 +2,19 @@ import { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { env } from "../../configs/env.config";
 import { useNavigate } from "react-router-dom";
-
-export default function Login(){
+export default function OtpPage(){
     const navigate=useNavigate();
-    const [email,setEmail]=useState<string>('');
-    const [password,setPassword]=useState<string>('');
-
-   
+    const [otpnumber,setotpnumber]=useState<string>('');
+    
 
     const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
-        const send={email,password};
+        const send={otpnumber};
         try{
-            const response=await axios.post(`${env.backendurl}/api/v1/oldUser`,send,{withCredentials:true});
-            if(response.data.message=== 'successfully found user'){
-                navigate('/OtpPage');
+            const response=await axios.post(`${env.backendurl}/api/v1/checkOtp`,send,{withCredentials:true});
+            if(response.data.message=== 'otp verified successfull'){
+                alert('otp verified successfull');
+                navigate('/Dashboard');
             }
         }catch(err){
             const error=err as AxiosError;
@@ -30,11 +28,10 @@ export default function Login(){
     }
     return(
         <>
-        <h1>welcome to chat app</h1>
+        <h1>Enter your otp here</h1>
         <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Enter your email here" value={email} onChange={(e)=>setEmail(e.target.value)}  />
-            <input type="password" placeholder="Enter your password here" value={password} onChange={(e)=>setPassword(e.target.value)} />
-            <button type="submit">login</button>
+            <input type="text" placeholder="Enter your 6 digit otp here" value={otpnumber} onChange={(e)=>setotpnumber(e.target.value)} />
+            <button type="submit">Submit</button>
         </form>
         </>
     );
