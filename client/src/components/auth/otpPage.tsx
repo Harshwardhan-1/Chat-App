@@ -42,6 +42,7 @@ export default function OtpPage(){
             }
         }finally{
             setLoading(false);
+            setIsBlurred(false);
         }
     }
     return(
