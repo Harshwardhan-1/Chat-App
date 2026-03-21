@@ -21,16 +21,15 @@ export default function OtpPage(){
         try{
             const response=await axios.post(`${env.backendurl}/api/v1/checkOtp`,send,{withCredentials:true});
             if(response.data.message=== 'otp verified successfull'){
-               Swal.fire({
+              await Swal.fire({
                 icon:"success",
                 title:"Otp Verification",
                 text:"Otp Verified Successfully",
-                 showConfirmButton: false,
+                 showConfirmButton: true,
                  background: "#0b1b2b",
                  color: "#e2e8f0",
-               }).then(()=>{
+               })
                 setIsBlurred(false);
-               });
                 navigate('/Dashboard');
             }
         }catch(err){
