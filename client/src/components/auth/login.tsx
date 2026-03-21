@@ -5,15 +5,18 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import '../../styles/login.css';
 
+
 export default function Login(){
     const navigate=useNavigate();
     const [email,setEmail]=useState<string>('');
     const [password,setPassword]=useState<string>('');
+    const [loading,setLoading]=useState<boolean>(false);
 
    
 
     const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
+        setLoading(true);
         const send={email,password};
         try{
             const response=await axios.post(`${env.backendurl}/api/v1/oldUser`,send,{withCredentials:true});
@@ -28,6 +31,8 @@ export default function Login(){
             }else{
                 alert(error.message);
             }
+        }finally{
+            setLoading(false);
         }
     }
     return(
@@ -41,7 +46,15 @@ export default function Login(){
             <input type="text" placeholder="Enter your email here" value={email} onChange={(e)=>setEmail(e.target.value)}  />
             <label>Password</label>
             <input type="password" placeholder="Enter your password here" value={password} onChange={(e)=>setPassword(e.target.value)} />
-            <button type="submit">login</button>
+           
+           
+            <button type="submit" disabled={loading}>
+                {loading ?<div className="spinner"></div>:"Login"}
+                </button>
+
+
+
+
             <div className="signup-link">
           Don't have an account?{" "}
           <Link to="/">SignUp</Link>

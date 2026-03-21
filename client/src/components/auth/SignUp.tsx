@@ -4,6 +4,7 @@ import axios, { AxiosError } from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import '../../styles/SignUp.css';
+import {easeIn, motion} from 'framer-motion';
 export default function SignUp(){
     const navigate=useNavigate();
     const [name,setName]=useState<string>('');
@@ -11,6 +12,7 @@ export default function SignUp(){
     const [email,setEmail]=useState<string>('');
     const [password,setPassword]=useState<string>('');
     const [confirmPassword,setConfirmPassword]=useState<string>('');
+    const [loading,setLoading]=useState<boolean>(false);
     
 
 
@@ -20,6 +22,7 @@ export default function SignUp(){
             alert('password and confirm password does not match');
             return 
         }
+        setLoading(true);
         try{
             const send={name,userName,email,password}
             const response=await axios.post(`${env.backendurl}/api/v1/addUser`,send,{withCredentials:true});
@@ -35,6 +38,8 @@ export default function SignUp(){
             }else{
                 alert(error.message);
             }
+        }finally{
+            setLoading(false);
         }
     }
 return(
@@ -54,7 +59,20 @@ return(
           <input type="password" placeholder='Create a password' value={password} onChange={(e)=>setPassword(e.target.value)} />
           <label>Confirm Password</label>
           <input type="password"  placeholder='Confirm Password' value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)}/>
-          <button type='submit'>Submit</button>
+         
+         
+          <motion.button 
+          initial={{y:100,opacity:0}}
+          animate={{y:0,opacity:1}}
+          transition={{duration:1.5,ease:easeIn}}
+          //disabled user cannot click button
+          disabled={true}
+          type='submit'>
+            {loading ? <div className="spinner"></div>:"SignUp" }
+          </motion.button>
+
+
+
           <div className="signin-link">
     Already have an account?{" "}
     <Link to="/login">Login</Link>

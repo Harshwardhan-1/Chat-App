@@ -3,17 +3,34 @@ import axios, { AxiosError } from "axios";
 import { env } from "../../configs/env.config";
 import { useNavigate } from "react-router-dom";
 import '../../styles/otpPage.css';
+import Swal from "sweetalert2";
+
 export default function OtpPage(){
     const navigate=useNavigate();
     const [otpnumber,setotpnumber]=useState<string>('');
+    const [loading,setLoading]=useState<boolean>(false);
+    const [isBlurred,setIsBlurred]=useState<boolean>(false);
+
     
 
     const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
+        setIsBlurred(true);
         const send={otpnumber};
+        setLoading(true);
         try{
             const response=await axios.post(`${env.backendurl}/api/v1/checkOtp`,send,{withCredentials:true});
             if(response.data.message=== 'otp verified successfull'){
+               Swal.fire({
+                icon:"success",
+                title:"Otp Verification",
+                text:"Otp Verified Successfully",
+                 showConfirmButton: false,
+                 background: "#0b1b2b",
+                 color: "#e2e8f0",
+               }).then(()=>{
+                setIsBlurred(false);
+               });
                 navigate('/Dashboard');
             }
         }catch(err){
@@ -24,17 +41,21 @@ export default function OtpPage(){
             }else{
                 alert(error.message);
             }
+        }finally{
+            setLoading(false);
         }
     }
     return(
         <>
-         <div className="otp-page-wrapper">
+         <div className={`otp-page-wrapper ${isBlurred?"blurred":""}`}>
       <div className="otp-page">
         <h1>Verify OTP</h1>
         <p>Enter the 6-digit OTP sent to your email</p>
         <form onSubmit={handleSubmit}>
             <input type="text" placeholder="Enter your 6 digit otp here" value={otpnumber} onChange={(e)=>setotpnumber(e.target.value)} />
-            <button type="submit">Submit</button>
+            <button type="submit">
+                {loading? <div className="spinner"></div> :"Submit"}
+            </button>
         </form>
         </div>
         </div>
