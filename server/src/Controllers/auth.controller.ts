@@ -112,3 +112,21 @@ export const oldUsers=async(req:Request,res:Response,next:NextFunction)=>{
       next(error);
    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const recieveOtp=async(req:Request,res:Response,next:NextFunction)=>{
+
+}

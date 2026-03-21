@@ -23,7 +23,7 @@ app.get("/"  , (req : Request, res : Response)=>{
 })
 
 
-app.use('/api/user',userRoutes);
+app.use('/api/v1',userRoutes);
 
 
 app.use(errorMiddleware);

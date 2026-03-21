@@ -10,6 +10,6 @@ export const userSchema=z.object({
 
 
 export const userLoginSchema=z.object({
-    email:z.string(),
+    email:z.string().email('invalid email format').nonempty('email is required'),
     password:z.string(),
 })
