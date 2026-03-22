@@ -12,4 +12,6 @@ export const {
     JWT_SECRET,
     SENDGRID_API_KEY,
     SENDGRID_EMAIL,
+    REPLICATE_API_KEY,
+    MAX_IMAGES_PER_USER,
 }=process.env;  
