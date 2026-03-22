@@ -17,7 +17,6 @@ app.use(cors({
 import userRoutes from "./Routes/userRoutes";
 
 
-
 app.get("/"  , (req : Request, res : Response)=>{
   res.send("hii harsh here")
 })

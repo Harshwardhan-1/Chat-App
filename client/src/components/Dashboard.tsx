@@ -1,3 +1,6 @@
+import  { AxiosError } from "axios";
+import { env } from "../configs/env.config";
+import axios from "axios";
 import { useState } from "react";
 export  function Dashboard(){
   const [ownImage,setOwnImage]=useState<File>();
@@ -12,8 +15,24 @@ export  function Dashboard(){
       alert('both images are required');
       return;
     }
-
+    const formData=new FormData();
+    formData.append('ownImage',ownImage);
+    formData.append('clothImage',clothImage);
+    try{
+    const response=await axios.post(`${env.backendurl}/api/v1/userPhoto`,formData,{withCredentials:true});
+    if(response.data.message=== 'successfull'){
+      alert('successfull get your image');
+    }
+  }catch(err){
+    const error=err as AxiosError;
+    if(error.response && error.response.data){
+      const data=error.response.data as {error?:string;message?:string};
+      alert(data.error || data.message || 'something went wrong');
+    }else{
+      alert(error.message);
+    }
   }
+}
     return(
         <>
        <div className="quick-tips">
