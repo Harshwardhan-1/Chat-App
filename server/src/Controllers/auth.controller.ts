@@ -1,12 +1,14 @@
 import {Request,Response,NextFunction} from 'express';
 import { addUserModel } from '../models/userModel';
-import { otpmodel } from '../models/otp.model';
+import { checkOtpModel } from '../models/otp.model';
 import { userSchema,userLoginSchema, } from '../validation/userValidation';
 import { checkUserOtpSchema } from '../validation/checkotp.validation';
+import { sendOtpService } from '../utils/otp.service';
 import bcrypt from 'bcrypt';
 import { SALT_ROUND,JWT_SECRET,SENDGRID_API_KEY ,SENDGRID_EMAIL} from '../configs/env.config';
 import jwt from 'jsonwebtoken';
 import sgMail from '@sendgrid/mail';  
+import { authRequest } from '../types/authRequest.type';
 sgMail.setApiKey(SENDGRID_API_KEY as string);
   
 
@@ -45,9 +47,9 @@ export const addUser=async(req:Request,res:Response,next:NextFunction)=>{
       const token=jwt.sign({email:email,userId:createUser._id,role:createUser.role},JWT_SECRET as string);
       res.cookie('token',token,{
          httpOnly:true,
-         sameSite:"none",
-         secure:true,
-         partitioned:true,
+         sameSite:"lax",
+         secure:false,
+         maxAge:7*24*60*60*1000
       });
       return res.status(201).json({
          success:true,
@@ -102,56 +104,18 @@ export const oldUsers=async(req:Request,res:Response,next:NextFunction)=>{
          });
       }
 
-      //generate otp and send to user 
-
-      const generateOtp=Math.floor(100000+Math.random()*900000);
-      const putOtp=await otpmodel.findOne({email});
-      if(!putOtp){
-         const createIt=await otpmodel.create({
-            email:email,
-            currentOtp:generateOtp,
-            otpexpireTime:new Date(Date.now()+5*60*1000)
-         });
-         if(!createIt){
-            return res.status(400).json({
-               success:false,
-               message:"error in sending message",
-               });
-            }
-         }else{
-            putOtp.currentOtp=generateOtp;
-            putOtp.otpexpireTime=new Date(Date.now()+5*60*1000);
-            await putOtp.save();
-         }
-        
-
-         const sendOtpToUser=async(email:string,otp:number)=>{
-            const msg={
-               to:email,
-               from:SENDGRID_EMAIL as string,
-               subject:"Your Otp Code is",
-               html:`
-         <h2>OTP Verification</h2>
-         <p>Your OTP is: <b>${otp}</b></p>
-         <p>This OTP is valid for 5 minutes.</p>
-         `
-            };
-            try{
-               await sgMail.send(msg);
-               console.log('otp send');
-            }catch(error){
-               console.log(error);
-               throw error;
-            }
-         }
-         await sendOtpToUser(email,generateOtp);
+      try{
+         await  sendOtpService(email);
+      }catch(err){
+         next(err);
+      }
 
       const token=jwt.sign({userId:oldUser._id,email:oldUser.email,role:oldUser.role},JWT_SECRET as string); 
       res.cookie("token",token,{
          httpOnly:true,
-         sameSite:"none",
-         secure:true,
-         partitioned:true,
+         sameSite:"lax",
+         secure:false,
+         maxAge:7*24*60*60*1000,
       });
       return res.status(200).json({
          success:true,
@@ -190,21 +154,21 @@ if(!parsed.success){
    });
 }
 const {otpnumber}=parsed.data;
-const record=await otpmodel.findOne({email});
+const record=await checkOtpModel.findOne({email});
 
 if(!record){
    return res.status(400).json({
       message:"no record found",
    });
 }
-if(!record.otpexpireTime || Date.now()>record.otpexpireTime.getTime()){
+if(!record.otpExpiresTime || Date.now()>record.otpExpiresTime.getTime()){
    return res.status(400).json({
       success:false,
       message:"otp expired",
    });
 }
 
-   if(record.currentOtp!==Number(otpnumber)){
+   if(record.otpValue!==Number(otpnumber)){
       return res.status(400).json({
       success:false,
       message:"invalid otp",
@@ -217,4 +181,82 @@ if(!record.otpexpireTime || Date.now()>record.otpexpireTime.getTime()){
    }catch(error){
       next(error);
    }
+}
+
+
+
+
+
+
+
+
+export const resendOtp=async(req:authRequest,res:Response,next:NextFunction)=>{
+try{
+   const user=req.user;
+   const email=user?.email;
+   if(!email){
+      return res.status(400).json({
+         success:false,
+         message:"email not found in record",
+      });
+   }
+   const checkIt=await checkOtpModel.findOne({email});
+   if(!checkIt){
+      return res.status(401).json({
+         success:false,
+         message:"email not found",
+      });
+   }
+   try{
+      await sendOtpService(email);
+      return res.status(200).json({
+         success:true,
+         message:"otp send successfully",
+      });
+   }catch(err){
+      next(err);
+   }
+}catch(err){
+   next(err);
+}
+}
+
+
+
+
+
+
+
+
+
+export const me=async(req:authRequest,res:Response,next:NextFunction)=>{
+   return res.status(200).json({
+      success:true,
+      message:"have cookie",
+      data:req.user,
+   });
+}
+
+
+
+
+
+
+export const logout=async(req:Request,res:Response,next:NextFunction)=>{
+try{
+   const token=req.cookies.token;
+   if(!token){
+      return res.status(401).json({
+         success:false,
+         message:"cookie not found",
+      })
+   }
+   res.clearCookie('token');
+   return res.status(200).json({
+      success:true,
+      message:"successfully logout",
+   });
+}catch(err){
+   next(err);
+}
 }

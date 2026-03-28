@@ -10,6 +10,7 @@ export default function OtpPage(){
     const [otpnumber,setotpnumber]=useState<string>('');
     const [loading,setLoading]=useState<boolean>(false);
     const [isBlurred,setIsBlurred]=useState<boolean>(false);
+    const [resendLoad,setResendLoad]=useState<boolean>(false);
 
     
 
@@ -45,6 +46,27 @@ export default function OtpPage(){
             setIsBlurred(false);
         }
     }
+
+    const handleResend=async(e:React.MouseEvent<HTMLButtonElement>)=>{
+        e.preventDefault();
+        setResendLoad(true);
+        try{
+            const response=await axios.get(`${env.backendurl}/api/v1/resend`,{withCredentials:true});
+            if(response.data.message=== 'otp send successfully'){
+                alert('otp send to your email successfully');
+            }
+        }catch(err){
+        const error=err as AxiosError;
+        if(error.response && error.response.data){
+            const data=error.response.data as {error:string;message:string};
+            alert(data.error || data.message || 'soemthing went wrong');
+        }else{
+            alert(error.message);
+        }
+    }finally{
+        setResendLoad(false);
+    }
+    }
     return(
         <>
          <div className={`otp-page-wrapper ${isBlurred?"blurred":""}`}>
@@ -56,6 +78,9 @@ export default function OtpPage(){
             <button type="submit">
                 {loading? <div className="spinner"></div> :"Submit"}
             </button>
+             <button onClick={handleResend} disabled={resendLoad}>
+                {resendLoad?<div className="spinner"></div>:"resend"}
+                </button>
         </form>
         </div>
         </div>
