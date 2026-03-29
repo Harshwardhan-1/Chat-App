@@ -45,7 +45,7 @@ export const addUserSchema=new mongoose.Schema<UserInterface>({
     },
     profilepic:{
         type:String,
-        default:"/images/defaultImage.avif",
+        default:"/uploads/defaultImage.avif",
     },
     createdAt:{
         type:Date,

@@ -260,3 +260,36 @@ try{
    next(err);
 }
 }
+
+
+
+
+
+
+
+
+
+
+export const userInfo=async(req:Request,res:Response,next:NextFunction)=>{
+   try{
+      const allUser=await addUserModel.find();
+      if(allUser.length===0){
+         return res.status(400).json({
+            success:false,
+            message:"no one to talk",
+         })
+      }
+      const userData=allUser.map(user=>({
+         name:user.name,
+         userName:user.userName,
+         email:user.email,
+      }))
+      return res.status(200).json({
+         success:true,
+         message:"successfull",
+         data:userData,
+      })
+   }catch(err){
+      next(err);
+   }
+}

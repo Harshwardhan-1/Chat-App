@@ -15,6 +15,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.1",
+    "socket.io-client": "^4.8.3",
     "sweetalert2": "^11.26.24",
     "sweetalert2-react-content": "^5.1.2"
   },
@@ -25,6 +26,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-router-dom": "^5.3.3",
+    "@types/socket.io-client": "^1.4.36",
     "@vitejs/plugin-react": "^6.0.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",

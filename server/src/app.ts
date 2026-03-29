@@ -20,7 +20,7 @@ import userRoutes from "./Routes/userRoutes";
 app.get("/"  , (req : Request, res : Response)=>{
   res.send("hii harsh here")
 })
-app.use('/images',express.static("public/images"));
+app.use('/uploads',express.static("uploads"));
 
 
 
