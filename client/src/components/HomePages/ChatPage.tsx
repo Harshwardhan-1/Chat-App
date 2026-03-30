@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios,{AxiosError} from "axios";
 import { env } from "../../configs/env.config";
+import '../../styles/ChatPage.css';
 export function ChatPage(){
     const [msg,setMsg]=useState<string>('');
     interface currentUser{
@@ -13,6 +14,7 @@ export function ChatPage(){
         email:string,
     }
         const [currentUserData,setCurrentUserData]=useState<currentUser>();
+        console.log(currentUserData);
     useEffect(()=>{
         const fetch=async()=>{
             try{
@@ -37,22 +39,28 @@ export function ChatPage(){
 
     const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
+        if(msg.trim()=== ''){
+            return alert('input field is empty');
+        }
         //logic of sending
     }
     return(
         <>
-        <h3>jo message karenga uski id:{currentUserData?._id}</h3>
-        <h3>jo message karenga uski email:{currentUserData?.email}</h3>
-        <img src="/defaultImage.avif" alt="" />
-        <br />
-         <h3>jisko message bhejna ha uski id:{data?.userId}</h3>
-        <h3>jisko message bhejna ha uska gmail:{data?.email}</h3>
-        <img src="defaultImage.avif" alt="" />
-
-        <form onSubmit={handleSubmit}>
+           <div className="chat-container">
+        <div className="chat-header">
+             <img src="defaultImage.avif" alt="Profile" />
+         <h4>{data?.userName}</h4>  
+         </div>      
+          <div className="chat-messages">
+            
+            <div className="message receiver">jisko message bhejna ha uski id:{data?.userId}</div>
+            <div className="message sender">jo message karenga uski id :{currentUserData?._id}</div>
+        </div>
+        <form className="chat-input" onSubmit={handleSubmit}>
             <input type="text" placeholder="Type Your Message here" value={msg} onChange={(e)=>setMsg(e.target.value)}/>
             <button type="submit">Send</button>
         </form>
+        </div>
         </>
     );
 }
