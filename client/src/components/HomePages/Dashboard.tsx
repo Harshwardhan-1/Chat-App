@@ -1,8 +1,12 @@
 import {useState, useEffect } from "react";
 import { env } from "../../configs/env.config";
 import axios,{AxiosError} from "axios";
+import '../../styles/Dashboard.css';
+import { useNavigate } from "react-router-dom";
 export function Dashboard(){
+  const navigate=useNavigate();
   interface userInfo{
+    userId:string,
     name:string,
     userName:string,
     email:string,
@@ -28,18 +32,24 @@ const [data,setData]=useState<userInfo[]>([]);
     };
     fetch();
   })
-  
+
+  const handleClick=async(all:userInfo)=>{
+    navigate('/ChatPage',{state:{harsh:all}});
+  }
   return(
     <>
-    <h1>DashBoard</h1>
+    <div className="dashboard-container">
+        <h1>Select A Chat To Start Conversion</h1>
     {
       data.map((all,index)=>(
-        <div key={index}>
+        <div key={index} className="user-card" onClick={()=>handleClick(all)}>
           <h1>{all.userName}</h1>
           <img src="/defaultImage.avif"  />
         </div>
       ))
     }
+    </div>  
     </>
   );
 }
+

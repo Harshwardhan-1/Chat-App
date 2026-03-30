@@ -270,9 +270,11 @@ try{
 
 
 
-export const userInfo=async(req:Request,res:Response,next:NextFunction)=>{
+export const userInfo=async(req:authRequest,res:Response,next:NextFunction)=>{
    try{
-      const allUser=await addUserModel.find();
+      const user=req.user;
+      const currentUserEmail=user?.email;
+      const allUser=await addUserModel.find({email:{$ne:currentUserEmail}}).select("-password");
       if(allUser.length===0){
          return res.status(400).json({
             success:false,
@@ -280,6 +282,7 @@ export const userInfo=async(req:Request,res:Response,next:NextFunction)=>{
          })
       }
       const userData=allUser.map(user=>({
+         userId:user._id,
          name:user.name,
          userName:user.userName,
          email:user.email,
@@ -289,6 +292,31 @@ export const userInfo=async(req:Request,res:Response,next:NextFunction)=>{
          message:"successfull",
          data:userData,
       })
+   }catch(err){
+      next(err);
+   }
+}
+
+
+
+
+
+export const currentUser=async(req:authRequest,res:Response,next:NextFunction)=>{
+   try{
+      const user=req.user;
+      const email=user?.email;
+      const checkUser=await addUserModel.findOne({email}).select("-password");
+      if(!checkUser){
+         return res.status(401).json({
+            success:false,
+            message:"user you are want to talk does not found",
+         });
+      }
+      return res.status(200).json({
+         success:true,
+         message:"successfull",
+         data:checkUser,
+      });
    }catch(err){
       next(err);
    }
