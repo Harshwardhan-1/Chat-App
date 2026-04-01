@@ -4,7 +4,6 @@ import axios, { AxiosError } from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import '../../styles/SignUp.css';
-import {easeIn, motion} from 'framer-motion';
 export default function SignUp(){
     const navigate=useNavigate();
     const [name,setName]=useState<string>('');
@@ -61,15 +60,10 @@ return(
           <input type="password"  placeholder='Confirm Password' value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)}/>
          
          
-          <motion.button 
-          initial={{y:100,opacity:0}}
-          animate={{y:0,opacity:1}}
-          transition={{duration:1.5,ease:easeIn}}
-          //disabled user cannot click button
-          disabled={true}
+          <button 
           type='submit'>
             {loading ? <div className="spinner"></div>:"SignUp" }
-          </motion.button>
+          </button>
 
 
 

@@ -48,13 +48,15 @@ export function ChatPage(){
         <>
            <div className="chat-container">
         <div className="chat-header">
-             <img src="defaultImage.avif" alt="Profile" />
+             <img src="defaultImage.avif" alt="Profile" />   
          <h4>{data?.userName}</h4>  
          </div>      
           <div className="chat-messages">
             
             <div className="message receiver">jisko message bhejna ha uski id:{data?.userId}</div>
+            <div className="message receiver">jisko message bhejna ha uski email:{data?.email}</div>
             <div className="message sender">jo message karenga uski id :{currentUserData?._id}</div>
+            <div className="message sender">jo message karenga uski id :{currentUserData?.email}</div>
         </div>
         <form className="chat-input" onSubmit={handleSubmit}>
             <input type="text" placeholder="Type Your Message here" value={msg} onChange={(e)=>setMsg(e.target.value)}/>

@@ -11,4 +11,4 @@ userRoutes.get('/me',isUserLoggedIn,me);
 userRoutes.get('/userInfo',isUserLoggedIn,userInfo);
 userRoutes.get('/currentUser',isUserLoggedIn,currentUser);
 
-export default userRoutes;     
+export default userRoutes;      
