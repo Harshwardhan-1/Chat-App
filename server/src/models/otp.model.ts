@@ -4,7 +4,7 @@ import { minLength,maxLength } from "zod";
 
 export interface userOtpInterface extends Document{
     _id:Types.ObjectId,
-    email?:string,
+        email?:string,
     otpValue?:Number,
     otpCreateTime?:Date,
     otpExpiresTime?:Date,
@@ -15,7 +15,6 @@ export const otpSchema=new mongoose.Schema<userOtpInterface>({
     email:{
         type:String,
         required:true,
-        unique:true,
         match : [/\S+@\S+\.\S+/, 'Please fill a valid email address']
     },
     otpValue:{

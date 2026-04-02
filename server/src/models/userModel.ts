@@ -29,7 +29,6 @@ export const addUserSchema=new mongoose.Schema<UserInterface>({
     email:{
         type:String,
         required:[true,"Email is required"],
-        unique:true,
         trim:true,
         match : [/\S+@\S+\.\S+/, 'Please fill a valid email address']
     },

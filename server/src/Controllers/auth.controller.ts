@@ -7,13 +7,10 @@ import { sendOtpService } from '../utils/otp.service';
 import bcrypt from 'bcrypt';
 import { SALT_ROUND,JWT_SECRET,SENDGRID_API_KEY ,SENDGRID_EMAIL} from '../configs/env.config';
 import jwt from 'jsonwebtoken';
-import sgMail from '@sendgrid/mail';  
 import { authRequest } from '../types/authRequest.type';
-sgMail.setApiKey(SENDGRID_API_KEY as string);
-  
 
 export const addUser=async(req:Request,res:Response,next:NextFunction)=>{
-   try{
+   try{ 
       const parsed=userSchema.safeParse(req.body);
       if(!parsed.success){
          const issue=parsed.error.issues[0];
@@ -104,11 +101,6 @@ export const oldUsers=async(req:Request,res:Response,next:NextFunction)=>{
          });
       }
 
-      try{
-         await  sendOtpService(email);
-      }catch(err){
-         next(err);
-      }
 
       const token=jwt.sign({userId:oldUser._id,email:oldUser.email,role:oldUser.role},JWT_SECRET as string); 
       res.cookie("token",token,{

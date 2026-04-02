@@ -8,19 +8,37 @@
   const io=new Server(server,{
     cors:{
       origin:FRONTEND_URL,
-      methods:["GET","POST"],
+      methods:["GET","POST","DELETE","UPDATE"],
       credentials:true,
     }
   });
+  
+  const users:{[key:string]:string}={};
+
   io.on('connection',(socket)=>{
-    console.log('User connected',socket.id); 
+    console.log('connected',socket.id);
+    socket.on("join",(userId:string)=>{
+      users[userId]=socket.id;
+      console.log('Joined',userId);
+    })
+
     socket.on('send_message',(data)=>{
-      io.emit('deliever_message',data);
+      const receiverSocketId=users[data.receiverId];
+      if(receiverSocketId){
+        io.to(receiverSocketId).emit('receive-message',data);
+      }
+      socket.emit('receive-message',data);
     });
-    socket.on('disconnect',(reason)=>{
-      console.log('user disconnectd',reason);
+    socket.on('disconnect',()=>{
+      for (const id in users) {
+      if (users[id] === socket.id) {
+        delete users[id];
+        break;
+      }
+    }
     })
   })
+ 
 server.listen(PORT, async() => { 
   console.log(`Server running on http://localhost:${PORT}`);
   await connectDb();

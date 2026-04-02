@@ -21,7 +21,7 @@ export default function Login(){
         try{
             const response=await axios.post(`${env.backendurl}/api/v1/oldUser`,send,{withCredentials:true});
             if(response.data.message=== 'successfully found user'){
-                navigate('/OtpPage');
+                navigate('/Dashboard');
             }
         }catch(err){
             const error=err as AxiosError;
